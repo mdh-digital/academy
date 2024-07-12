@@ -19,7 +19,8 @@ return new class extends Migration
             $table->string('avatar')->nullable();
             $table->string('background')->nullable();
             $table->string('birthday')->nullable();
-            $table->enum('role',['teacher','student','admin'])->default('teacher');
+            $table->enum('role',['teacher','student','admin'])->default('student');
+            $table->enum('gender',['pria','wanita'])->default('pria');
             $table->string('bio')->nullable();
             $table->longText('description')->nullable();
             $table->timestamp('email_verified_at')->nullable();

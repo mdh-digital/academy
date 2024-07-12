@@ -2,14 +2,16 @@
 
 namespace App\Models;
 
- use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 use App\Models\Academy\Attendance;
 use App\Models\Academy\Learning;
-use App\Models\Academy\MapelUserAccess; 
+use App\Models\Academy\MapelUserAccess;
 use App\Models\Academy\UserTask;
 use App\Models\Master\Mapel;
 use App\Models\User\UserLink;
+use App\Notifications\User\EmailVerificationNotification;
+use App\Notifications\User\ForgetPasswordNotification;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -35,7 +37,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'role',
         'bio',
         'description',
-        'email_verified_at'
+        'email_verified_at',
+        'gender'
     ];
 
     /**
@@ -78,33 +81,55 @@ class User extends Authenticatable implements MustVerifyEmail
         });
     }
 
+    /**
+     * Send the email verification notification.
+     *
+     * @return void
+     */
+
+    public function sendEmailVerificationNotification()
+    {
+        $this->notify(new EmailVerificationNotification);
+    }
+
+    /**
+     * Send the password reset notification.
+     *
+     * @param  string  $token
+     * @return void
+     */
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new ForgetPasswordNotification($token));
+    }
+
     public function mapels()
     {
-        return $this->hasMany(Mapel::class,'pic_id');
+        return $this->hasMany(Mapel::class, 'pic_id');
     }
 
     public function open_classes()
     {
-        return $this->hasMany(Learning::class,'user_id');
+        return $this->hasMany(Learning::class, 'user_id');
     }
 
     public function attendances()
     {
-        return $this->hasMany(Attendance::class,'user_id');
+        return $this->hasMany(Attendance::class, 'user_id');
     }
 
     public function tasks()
     {
-        return $this->hasMany(UserTask::class,'user_id');
+        return $this->hasMany(UserTask::class, 'user_id');
     }
 
     public function links()
     {
-        return $this->hasMany(UserLink::class,'user_id');
+        return $this->hasMany(UserLink::class, 'user_id');
     }
 
     public function mapel_access()
     {
-        return $this->hasMany(MapelUserAccess::class,'user_id');
+        return $this->hasMany(MapelUserAccess::class, 'user_id');
     }
 }
