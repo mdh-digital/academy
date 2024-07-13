@@ -15,6 +15,8 @@ class ForAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        return $next($request);
+        return auth()->check() && auth()->user()->role == 'admin' ?
+            $next($request) :
+            redirect()->route('login');
     }
 }

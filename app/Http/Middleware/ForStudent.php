@@ -15,6 +15,8 @@ class ForStudent
      */
     public function handle(Request $request, Closure $next): Response
     {
-        return $next($request);
+        return auth()->check() && auth()->user()->role == 'student' ?
+            $next($request) :
+            redirect()->route('login');
     }
 }

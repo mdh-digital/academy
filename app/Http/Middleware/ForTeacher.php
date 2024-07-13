@@ -15,6 +15,8 @@ class ForTeacher
      */
     public function handle(Request $request, Closure $next): Response
     {
-        return $next($request);
+        return auth()->check() && auth()->user()->role == 'teacher' ?
+            $next($request) :
+            redirect()->route('login');
     }
 }

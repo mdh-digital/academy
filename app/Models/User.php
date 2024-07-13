@@ -132,4 +132,17 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(MapelUserAccess::class, 'user_id');
     }
+
+    public function getImageDataAttribute()
+    {
+
+        $image = $this->avatar;
+
+        if (file_exists($image)) {
+            return $image;
+        } else {
+            return 'img/p-icon.png';
+        }
+        return $image;
+    }
 }
